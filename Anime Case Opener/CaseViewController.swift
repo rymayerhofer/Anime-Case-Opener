@@ -10,60 +10,84 @@ import AVFoundation
 
 class CasesViewController: UIViewController {
     
-    @IBOutlet weak var imageView: UIImageView!
-    
+    private let imageView: UIImageView = {
+        let iv = UIImageView()
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.clipsToBounds = true
+        iv.contentMode = .scaleAspectFill
+        iv.isUserInteractionEnabled = true
+        iv.accessibilityIdentifier = "caseImageView"
+        return iv
+    }()
+
     private var audioPlayer: AVAudioPlayer?
-    
-    // Key to store collected characters in UserDefaults.
     private let collectionKey = "collectedCharacters"
-    
+
+    // MARK: - Lifecycle
+
+    override func loadView() {
+        view = UIView()
+        view.backgroundColor = .systemBackground
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openCase))
-        imageView.isUserInteractionEnabled = true
-        imageView.addGestureRecognizer(tapGesture)
+        setupUI()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(openCase))
+        imageView.addGestureRecognizer(tap)
     }
-    
+
+    private func setupUI() {
+        view.addSubview(imageView)
+        imageView.image = UIImage(named: "cs case")
+
+        NSLayoutConstraint.activate([
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
+            imageView.widthAnchor.constraint(equalToConstant: 301),
+            imageView.heightAnchor.constraint(equalToConstant: 223)
+        ])
+    }
+
+    // MARK: - Actions
+
     @objc private func openCase() {
         playSound(named: "sound_ui_panorama_case_unlock_01.wav")
-        
-        //TODO: improve animation
-        UIView.animate(withDuration: 0.1,
-                       animations: {
+
+        UIView.animate(withDuration: 0.1, animations: {
             self.imageView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-        },
-                       completion: { _ in
+        }) { _ in
             UIView.animate(withDuration: 0.1) {
-                self.imageView.transform = CGAffineTransform.identity
+                self.imageView.transform = .identity
             }
-        })
-        
+        }
+
         Character.fetchRandomCharacter { [weak self] character in
-            guard let character = character else { return }
-            
-            // Save the character to collection.
-            var currentCollection = Character.getCharacters(forKey: self?.collectionKey ?? "")
-            // Avoid duplicates.
+            guard let self = self, let character = character else { return }
+
+            var currentCollection = Character.getCharacters(forKey: self.collectionKey)
             if !currentCollection.contains(where: { $0.charID == character.charID }) {
                 currentCollection.append(character)
-                Character.save(currentCollection, forKey: self?.collectionKey ?? "")
+                Character.save(currentCollection, forKey: self.collectionKey)
             }
-            
-            print("✅ Attempting to perform segue to detail with character: \(character.name)")
-            
+
             DispatchQueue.main.async {
-                guard let self = self else { return }
                 if character.favorites < 1000 {
                     self.playSound(named: "sound_ui_panorama_case_reveal_rare_01.wav")
                 } else {
                     self.playSound(named: "sound_ui_panorama_case_reveal_ancient_01.wav")
                 }
-                self.performSegue(withIdentifier: "showDetail", sender: character)
+
+                let detailVC = DetailViewController(character: character)
+                if let nav = self.navigationController {
+                    nav.pushViewController(detailVC, animated: true)
+                } else {
+                    self.present(detailVC, animated: true, completion: nil)
+                }
             }
         }
     }
-    
+
     private func playSound(named soundName: String) {
         guard let url = Bundle.main.url(forResource: soundName, withExtension: nil) else {
             print("Sound file \(soundName) not found!")
@@ -75,14 +99,6 @@ class CasesViewController: UIViewController {
             audioPlayer?.play()
         } catch {
             print("Error playing sound:", error)
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showDetail",
-           let detailVC = segue.destination as? DetailViewController,
-           let character = sender as? Character {
-            detailVC.character = character
         }
     }
 }
