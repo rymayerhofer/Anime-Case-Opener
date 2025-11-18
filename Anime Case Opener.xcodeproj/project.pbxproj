@@ -14,7 +14,7 @@
 		EF48B1822D9DD9C900714130 /* Exceptions for "Anime Case Opener" folder in "Anime Case Opener" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Application/Info.plist,
 			);
 			target = EF48B16F2D9DD9C800714130 /* Anime Case Opener */;
 		};
@@ -147,7 +147,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GF7U3HMQ9V;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Anime Case Opener/Info.plist";
+				INFOPLIST_FILE = "Anime Case Opener/Application/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -174,7 +174,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GF7U3HMQ9V;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Anime Case Opener/Info.plist";
+				INFOPLIST_FILE = "Anime Case Opener/Application/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
