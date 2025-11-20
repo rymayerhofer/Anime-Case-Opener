@@ -8,7 +8,7 @@
 import UIKit
 import Nuke
 
-class CharacterCollectionViewCell: UICollectionViewCell {
+final class CharacterCollectionViewCell: UICollectionViewCell {
     
     private let imageView: UIImageView = {
         let iv = UIImageView()

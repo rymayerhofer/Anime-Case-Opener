@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CollectionViewController: UIViewController {
+final class CollectionViewController: UIViewController {
     
     private var collectionView: UICollectionView!
     private var collectedCharacters: [Character] = []

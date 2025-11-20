@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 
-class CasesViewController: UIViewController {
+final class CasesViewController: UIViewController {
     
     private let imageView: UIImageView = {
         let iv = UIImageView()

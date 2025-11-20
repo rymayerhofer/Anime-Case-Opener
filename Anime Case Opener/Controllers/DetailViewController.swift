@@ -6,8 +6,15 @@
 //
 
 import UIKit
+import Foundation
 
-class DetailViewController: UIViewController {
+struct InfoItem {
+    let label: String
+    let value: String
+    let url: URL?
+}
+
+final class DetailViewController: UIViewController {
     
     private let character: Character
 
