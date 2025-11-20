@@ -54,25 +54,27 @@ final class CasesViewController: UIViewController {
     @objc private func openCase() {
         playSound(named: "sound_ui_panorama_case_unlock_01.wav")
 
-        UIView.animate(withDuration: 0.1, animations: {
-            self.imageView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-        }) { _ in
-            UIView.animate(withDuration: 0.1) {
-                self.imageView.transform = .identity
-            }
-        }
+        Task { [weak self] in
+            guard let self = self else { return }
 
-        Character.fetchRandomCharacter { [weak self] character in
-            guard let self = self, let character = character else { return }
+            let storage = CharacterStorage.shared
 
-            var currentCollection = Character.getCharacters(forKey: self.collectionKey)
-            if !currentCollection.contains(where: { $0.charID == character.charID }) {
-                currentCollection.append(character)
-                Character.save(currentCollection, forKey: self.collectionKey)
-            }
+            let claimed = await storage.RandomUnowned(markAsOwned: true)
 
-            DispatchQueue.main.async {
-                if character.favorites < 1000 {
+            await MainActor.run {
+                guard let character = claimed else {
+                    print("[openCase] No unowned character available to claim.")
+                    let alert = UIAlertController(title: "No Characters", message: "There are no unowned characters available right now.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    if let nav = self.navigationController {
+                        nav.present(alert, animated: true)
+                    } else {
+                        self.present(alert, animated: true)
+                    }
+                    return
+                }
+
+                if character.favorites < 10000 {
                     self.playSound(named: "sound_ui_panorama_case_reveal_rare_01.wav")
                 } else {
                     self.playSound(named: "sound_ui_panorama_case_reveal_ancient_01.wav")

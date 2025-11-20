@@ -12,7 +12,8 @@ final class CollectionViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var collectedCharacters: [Character] = []
     private var sortedCharacters: [Character] = []
-    private let collectionKey = "collectedCharacters"
+
+    private let storage = CharacterStorage.shared
 
     enum SortOption {
         case dateAdded
@@ -23,7 +24,6 @@ final class CollectionViewController: UIViewController {
     // MARK: - Lifecycle
 
     override func loadView() {
-        // Create root view programmatically
         view = UIView()
         view.backgroundColor = .systemBackground
     }
@@ -72,11 +72,14 @@ final class CollectionViewController: UIViewController {
     // MARK: - Data
 
     private func loadCollectedCharacters() {
-        // Ensure this runs on main thread if Character accesses UserDefaults
-        DispatchQueue.main.async {
-            self.collectedCharacters = Character.getCharacters(forKey: self.collectionKey)
-            self.sortedCharacters = self.collectedCharacters
-            self.collectionView.reloadData()
+        Task { [weak self] in
+            guard let self = self else { return }
+            let owned = await self.storage.loadOwned()
+            await MainActor.run {
+                self.collectedCharacters = owned
+                self.sortedCharacters = owned
+                self.collectionView.reloadData()
+            }
         }
     }
 
@@ -122,8 +125,8 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CharacterCell", for: indexPath) as? CharacterCollectionViewCell else {
             fatalError("Unable to dequeue CharacterCollectionViewCell")
         }
-        let character = sortedCharacters[indexPath.item]
-        cell.configure(with: character)
+
+        cell.configure(with: sortedCharacters[indexPath.item])
         return cell
     }
 
