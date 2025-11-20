@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Nuke
 
 class CharacterCollectionViewCell: UICollectionViewCell {
     
@@ -56,6 +57,6 @@ class CharacterCollectionViewCell: UICollectionViewCell {
     
     func configure(with character: Character) {
         nameLabel.text = character.name
-        imageView.load(url: character.imageURL)
+        imageView.nukeSetImage(with: character.imageURL)
     }
 }

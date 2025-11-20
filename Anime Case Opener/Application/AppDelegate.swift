@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Nuke
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {}

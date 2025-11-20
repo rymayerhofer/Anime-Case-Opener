@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		EF24735C2ECE1213005E76D5 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = EF24735B2ECE1213005E76D5 /* Nuke */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		EF48B1702D9DD9C800714130 /* Anime Case Opener.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Anime Case Opener.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF24735C2ECE1213005E76D5 /* Nuke in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = "Anime Case Opener";
 			packageProductDependencies = (
+				EF24735B2ECE1213005E76D5 /* Nuke */,
 			);
 			productName = "Anime Case Opener";
 			productReference = EF48B1702D9DD9C800714130 /* Anime Case Opener.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = EF48B1672D9DD9C800714130;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				EF24735A2ECE11CC005E76D5 /* XCRemoteSwiftPackageReference "Nuke" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EF48B1712D9DD9C800714130 /* Products */;
 			projectDirPath = "";
@@ -335,6 +344,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EF24735A2ECE11CC005E76D5 /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EF24735B2ECE1213005E76D5 /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EF24735A2ECE11CC005E76D5 /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EF48B1682D9DD9C800714130 /* Project object */;
 }
