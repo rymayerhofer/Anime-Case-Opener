@@ -56,7 +56,7 @@ final class CasesViewController: UIViewController {
     // MARK: - Actions
 
     @objc private func openCase() {
-        playSound(named: "sound_ui_panorama_case_unlock_01.wav")
+        audioPlayer = AVAudioPlayer.playSound(named: "sound_ui_panorama_case_unlock_01.wav")
 
         Task { [weak self] in
             guard let self = self else { return }
@@ -85,11 +85,11 @@ final class CasesViewController: UIViewController {
             try? await Task.sleep(nanoseconds: UInt64(self.delayBeforeTransition * 1_000_000_000))
 
             await MainActor.run {
-                if character.favorites < 10000 {
-                    self.playSound(named: "sound_ui_panorama_case_reveal_rare_01.wav")
-                } else {
-                    self.playSound(named: "sound_ui_panorama_case_reveal_ancient_01.wav")
-                }
+                self.audioPlayer = AVAudioPlayer.playSound(
+                    named: character.favorites < 10000
+                        ? "sound_ui_panorama_case_reveal_rare_01.wav"
+                        : "sound_ui_panorama_case_reveal_ancient_01.wav"
+                )
 
                 let detailVC = DetailViewController(character: character)
                 if let nav = self.navigationController {
@@ -98,20 +98,6 @@ final class CasesViewController: UIViewController {
                     self.present(detailVC, animated: true, completion: nil)
                 }
             }
-        }
-    }
-
-    private func playSound(named soundName: String) {
-        guard let url = Bundle.main.url(forResource: soundName, withExtension: nil) else {
-            print("Sound file \(soundName) not found!")
-            return
-        }
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.prepareToPlay()
-            audioPlayer?.play()
-        } catch {
-            print("Error playing sound:", error)
         }
     }
 }
