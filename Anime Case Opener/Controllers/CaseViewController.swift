@@ -23,8 +23,12 @@ final class CasesViewController: UIViewController {
     private var audioPlayer: AVAudioPlayer?
     private let collectionKey = "collectedCharacters"
 
-    // MARK: - Lifecycle
+    private let delayBeforeAnimation: TimeInterval = 0.4
+    private let delayBeforeTransition: TimeInterval = 0.45
 
+    private let animationService = CaseAnimationService()
+
+    // MARK: - Lifecycle (same as before)
     override func loadView() {
         view = UIView()
         view.backgroundColor = .systemBackground
@@ -58,11 +62,10 @@ final class CasesViewController: UIViewController {
             guard let self = self else { return }
 
             let storage = CharacterStorage.shared
-
             let claimed = await storage.RandomUnowned(markAsOwned: true)
 
-            await MainActor.run {
-                guard let character = claimed else {
+            guard let character = claimed else {
+                await MainActor.run {
                     print("[openCase] No unowned character available to claim.")
                     let alert = UIAlertController(title: "No Characters", message: "There are no unowned characters available right now.", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -71,9 +74,17 @@ final class CasesViewController: UIViewController {
                     } else {
                         self.present(alert, animated: true)
                     }
-                    return
                 }
+                return
+            }
 
+            try? await Task.sleep(nanoseconds: UInt64(self.delayBeforeAnimation * 1_000_000_000))
+
+            await self.animationService.animateOpen(on: self.imageView)
+
+            try? await Task.sleep(nanoseconds: UInt64(self.delayBeforeTransition * 1_000_000_000))
+
+            await MainActor.run {
                 if character.favorites < 10000 {
                     self.playSound(named: "sound_ui_panorama_case_reveal_rare_01.wav")
                 } else {
