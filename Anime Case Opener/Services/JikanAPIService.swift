@@ -107,4 +107,25 @@ final class JikanAPIService {
             throw ServiceError.unknown
         }
     }
+    
+    func fetchWithRetry(
+        _ block: @escaping () async throws -> Data,
+        requestDelay: UInt64 = 500_000_000,
+        retryDelay: UInt64 = 400_000_000
+    ) async throws -> Data {
+        while true {
+            do {
+                let data = try await block()
+                try await Task.sleep(nanoseconds: requestDelay)
+                return data
+            } catch {
+                if (error as? ServiceError) == .rateLimited {
+                    print("[API Service] Rate limited, retrying after delay...")
+                    try await Task.sleep(nanoseconds: retryDelay)
+                    continue
+                }
+                throw error
+            }
+        }
+    }
 }
