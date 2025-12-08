@@ -7,6 +7,7 @@
 * MacOS 15.7+
 * Xcode 26+
 * iOS 26+ simulator
+* Nuke 12.8
 
 ## Run Instructions
 
